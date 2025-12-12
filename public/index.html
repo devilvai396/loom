@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loom</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Loom" />
+  <meta property="og:description" content="Type anything and Loom turns your keystroke timing into a woven pattern. Save a daily weave, revisit last 7 days, and copy the textile as PNG." />
+  <meta property="og:image" content="https://{DOMAIN}/assets/hero.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://{DOMAIN}/" />
+
+  <!-- Farcaster Mini App meta (JSON-stringified, valid JSON!) -->
+  <meta name="fc:miniapp" content="{&quot;version&quot;: &quot;1&quot;, &quot;imageUrl&quot;: &quot;https://{DOMAIN}/assets/embed-3x2.png&quot;, &quot;button&quot;: {&quot;title&quot;: &quot;Open&quot;, &quot;action&quot;: {&quot;type&quot;: &quot;launch_frame&quot;, &quot;url&quot;: &quot;https://{DOMAIN}/&quot;}}, &quot;splashImageUrl&quot;: &quot;https://{DOMAIN}/assets/splash.png&quot;, &quot;splashBackgroundColor&quot;: &quot;#180820&quot;, &quot;name&quot;: &quot;Loom&quot;, &quot;homeUrl&quot;: &quot;https://{DOMAIN}/&quot;, &quot;iconUrl&quot;: &quot;https://{DOMAIN}/assets/icon.png&quot;}" />
+
+  <!-- Backwards compatible Farcaster Frame tags -->
+  <meta property="fc:frame" content="vNext" />
+  <meta property="fc:frame:image" content="https://{DOMAIN}/assets/embed-3x2.png" />
+  <meta property="fc:frame:button:1" content="Open" />
+  <meta property="fc:frame:button:1:action" content="link" />
+  <meta property="fc:frame:button:1:target" content="https://{DOMAIN}/" />
+
+  <!-- launch_frame + required splash fields -->
+  <meta property="fc:frame:action" content="launch_frame" />
+  <meta property="fc:frame:post_url" content="https://{DOMAIN}/" />
+  <meta property="fc:frame:splash_image" content="https://{DOMAIN}/assets/splash.png" />
+  <meta property="fc:frame:splash_background_color" content="#180820" />
+
+  <style>
+    :root {
+      --bg:#180820;
+      --cream:#faf5ff;
+      --muted:rgba(250,245,255,.72);
+      --line:rgba(250,245,255,.18);
+      --copper:#c77844;
+      --teal:#2dd4bf;
+      --violet:#7c3aed;
+      --shadow: 0 22px 70px rgba(0,0,0,.50);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 650px at 15% 20%, rgba(45,212,191,.18), transparent 62%),
+        radial-gradient(900px 650px at 85% 30%, rgba(199,120,68,.18), transparent 62%),
+        radial-gradient(900px 650px at 50% 95%, rgba(124,58,237,.16), transparent 62%),
+        var(--bg);
+      color:var(--cream);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+    }
+    .page{min-height:100%;display:flex;justify-content:center;padding:16px}
+    .shell{width:100%;max-width:680px;display:flex;flex-direction:column;gap:12px}
+    .banner{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 14px;border:1px solid var(--line);border-radius:16px;
+      background:rgba(255,255,255,.06);backdrop-filter:blur(10px);
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+    }
+    .title strong{font-size:14px;letter-spacing:.18em}
+    .title span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+    #status{font-size:12px;color:var(--muted);text-align:right;max-width:260px;line-height:1.2}
+
+    .wrap{display:flex;flex-direction:column;gap:12px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px}
+    .logo{font-weight:950;letter-spacing:.22em;font-size:13px}
+    .sub{font-size:12px;color:var(--muted);margin-top:3px}
+
+    .card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.18));
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      padding:14px;
+    }
+    .hint{font-size:12px;color:var(--muted);line-height:1.25;margin-bottom:10px}
+    .field{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:10px}
+    input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(250,245,255,.20);
+      background:rgba(0,0,0,.18);
+      color:var(--cream);
+      font-size:14px;
+      outline:none;
+    }
+    input:focus{border-color:rgba(45,212,191,.7); box-shadow:0 0 0 4px rgba(45,212,191,.16)}
+
+    canvas{
+      width:100%;
+      height:240px;
+      border-radius:18px;
+      border:1px solid rgba(250,245,255,.16);
+      background:rgba(0,0,0,.12);
+      margin-bottom:12px;
+    }
+
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn{
+      border:1px solid rgba(250,245,255,.20);
+      background:rgba(250,245,255,.08);
+      color:var(--cream);
+      border-radius:16px;
+      padding:12px 12px;
+      font-weight:900;
+      font-size:14px;
+      cursor:pointer;
+      transition:transform .08s ease, background .18s ease, border-color .18s ease;
+    }
+    .btn:hover{background:rgba(250,245,255,.10);border-color:rgba(250,245,255,.28)}
+    .btn:active{transform:scale(.99)}
+    .btn.ghost{background:transparent}
+
+    .stripTitle{margin-top:12px;font-size:12px;color:var(--muted);letter-spacing:.10em}
+    .days{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .day{
+      border:1px solid rgba(250,245,255,.18);
+      background:rgba(0,0,0,.12);
+      color:var(--cream);
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .day.on{border-color:rgba(199,120,68,.55); box-shadow:0 0 0 3px rgba(199,120,68,.16)}
+    .tinyNote{margin-top:10px;font-size:12px;color:var(--muted)}
+
+    .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 4px;color:var(--muted);font-size:12px}
+    .envpill{padding:6px 10px;border-radius:999px;border:1px solid rgba(250,245,255,.18);background:rgba(0,0,0,.14)}
+
+    @media (max-width:420px){
+      .field{grid-template-columns:1fr}
+      .actions{grid-template-columns:1fr}
+      #status{max-width:170px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="banner">
+        <div class="title">
+          <strong>Loom</strong>
+          <span>Weave your rhythm.</span>
+        </div>
+        <div id="status">Loading…</div>
+      </div>
+
+      <div id="app" aria-label="Loom Mini App"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./script.js"></script>
+</body>
+</html>
