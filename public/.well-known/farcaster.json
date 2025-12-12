@@ -1,0 +1,31 @@
+{
+  "accountAssociation": {
+    "header": "TODO_REPLACE_BASE64_HEADER",
+    "payload": "TODO_REPLACE_BASE64_PAYLOAD",
+    "signature": "TODO_REPLACE_BASE64_SIGNATURE"
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Loom",
+    "homeUrl": "https://{DOMAIN}/",
+    "iconUrl": "https://{DOMAIN}/assets/icon.png",
+    "splashImageUrl": "https://{DOMAIN}/assets/splash.png",
+    "splashBackgroundColor": "#180820",
+    "subtitle": "Weave your rhythm.",
+    "description": "Type anything and Loom turns your keystroke timing into a woven pattern. Save a daily weave, revisit last 7 days, and copy the textile as PNG.",
+    "primaryCategory": "art-creativity",
+    "tags": [
+      "fun",
+      "simple",
+      "utility"
+    ],
+    "heroImageUrl": "https://{DOMAIN}/assets/hero.png",
+    "ogTitle": "Loom",
+    "ogDescription": "Type anything and Loom turns your keystroke timing into a woven pattern. Save a daily weave, revisit last 7 days, and copy the textile as PNG.",
+    "ogImageUrl": "https://{DOMAIN}/assets/hero.png",
+    "screenshotUrls": [
+      "https://{DOMAIN}/assets/hero.png"
+    ],
+    "noindex": true
+  }
+}
